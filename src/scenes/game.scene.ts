@@ -1,0 +1,64 @@
+import {
+  DefaultLoader,
+  Engine,
+  ExcaliburGraphicsContext,
+  Scene,
+  SceneActivationContext,
+} from "excalibur";
+import { Ground } from "../actors/ground.actor";
+import { Hero } from "../actors/hero.actor";
+
+export class GameScene extends Scene {
+  private _ground!: Ground;
+  private _hero!: Hero;
+
+  override onInitialize(engine: Engine): void {
+    this._hero = new Hero(engine);
+    this.add(this._hero);
+
+    this._ground = new Ground(engine);
+    this.add(this._ground);
+
+    this._start();
+  }
+
+  override onPreLoad(loader: DefaultLoader): void {
+    // Add any scene specific resources to load
+  }
+
+  override onActivate(context: SceneActivationContext<unknown>): void {
+    // Called when Excalibur transitions to this scene
+    // Only 1 scene is active at a time
+  }
+
+  override onDeactivate(context: SceneActivationContext): void {
+    // Called when Excalibur transitions away from this scene
+    // Only 1 scene is active at a time
+  }
+
+  override onPreUpdate(engine: Engine, elapsedMs: number): void {
+    // Called before anything updates in the scene
+  }
+
+  override onPostUpdate(engine: Engine, elapsedMs: number): void {
+    // Called after everything updates in the scene
+  }
+
+  override onPreDraw(ctx: ExcaliburGraphicsContext, elapsedMs: number): void {
+    // Called before Excalibur draws to the screen
+  }
+
+  override onPostDraw(ctx: ExcaliburGraphicsContext, elapsedMs: number): void {
+    // Called after Excalibur draws to the screen
+  }
+
+  private _start(): void {
+    this._ground.start();
+    this._hero.start();
+  }
+
+  private _stop(): void {
+    this._ground.stop();
+    this._hero.stop();
+  }
+}

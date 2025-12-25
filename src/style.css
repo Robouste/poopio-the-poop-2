@@ -1,0 +1,26 @@
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ddd;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #222;
+  }
+}
+
+.hidden {
+  display: none;
+}
+
+#main-menu {
+  z-index: 10;
+  position: absolute;
+  top: 0;
+}
+
+#start-button {
+  pointer-events: all;
+}
