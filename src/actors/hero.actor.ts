@@ -131,7 +131,6 @@ export class Hero extends Actor {
   ): void {
     if (other.owner instanceof Ground) {
       this._noOfJumps = 2;
-      this._isJumping = false;
       this.graphics.use(HeroAnimation.Run);
     }
   }
