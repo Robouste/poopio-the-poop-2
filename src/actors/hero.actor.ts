@@ -197,7 +197,7 @@ export class Hero extends Actor {
     }
 
     this._noOfJumps--;
-    this.vel.y = -400;
+    this.vel.y = Config.HeroJumpVelocity;
     this.graphics.use(HeroAnimation.Jump);
   }
 

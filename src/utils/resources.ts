@@ -9,6 +9,8 @@ export const Resources = {
       wrapping: ImageWrapping.Repeat,
     }),
     HeroBullet: new ImageSource("./images/bullets/hero-bullet.png"),
+    Obsticle1: new ImageSource("./images/obsticles/plunger.png"),
+    Obsticle2: new ImageSource("./images/obsticles/toilet-paper.png"),
   },
   // Sounds
   Sounds: {
