@@ -18,7 +18,9 @@ import {
   SpriteSheet,
   vec,
 } from "excalibur";
+import { GameScene } from "../scenes/game.scene";
 import { Resources } from "../utils/resources";
+import { Ennemy } from "./ennemy.base";
 import { Ground } from "./ground.actor";
 import { HeroBullet } from "./hero-bullet.actor";
 
@@ -47,7 +49,7 @@ export class Hero extends Actor {
   private _noOfJumps = 2;
   private _isPlaying = false;
 
-  constructor(engine: Engine) {
+  constructor(engine: Engine, private _gameScene: GameScene) {
     super({
       name: "Hero",
       pos: vec(50, engine.screen.drawHeight - Config.GroundHeight - 84),
@@ -110,6 +112,10 @@ export class Hero extends Actor {
     if (other.owner instanceof Ground) {
       this._noOfJumps = 2;
       this.graphics.use(HeroAnimation.Run);
+    }
+
+    if (other.owner instanceof Ennemy) {
+      this._gameScene.gameOver();
     }
   }
 

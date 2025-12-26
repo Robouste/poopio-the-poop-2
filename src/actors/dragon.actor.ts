@@ -12,6 +12,7 @@ import {
   vec,
   Vector,
 } from "excalibur";
+import { GameScene } from "../scenes/game.scene";
 import { Ennemy } from "./ennemy.base";
 import { HeroBullet } from "./hero-bullet.actor";
 import { Hero } from "./hero.actor";
@@ -23,6 +24,8 @@ enum DragonAnimation {
 
 export class Dragon extends Ennemy {
   public isInvincible = false;
+  public scoreValue = 50;
+
   public get hp(): number {
     return this._hp;
   }
@@ -30,7 +33,7 @@ export class Dragon extends Ennemy {
     this._hp = value;
 
     if (this._hp <= 0) {
-      this.kill();
+      this.emit("defeated");
     }
   }
 
@@ -39,8 +42,8 @@ export class Dragon extends Ennemy {
   private _hero!: Hero;
   private _hp = 3;
 
-  constructor(pos: Vector) {
-    super({
+  constructor(pos: Vector, gameScene: GameScene) {
+    super(gameScene, {
       pos,
       height: 56,
       width: 80,
@@ -49,6 +52,8 @@ export class Dragon extends Ennemy {
   }
 
   public override onInitialize(engine: Engine): void {
+    super.onInitialize(engine);
+
     const hero = this.scene?.actors.find((actor) => actor instanceof Hero);
 
     if (!hero) {
@@ -85,8 +90,6 @@ export class Dragon extends Ennemy {
     this.graphics.add(DragonAnimation.Hit, this._hitAnimation);
 
     this.graphics.use(DragonAnimation.Fly);
-
-    this.on("exitviewport", () => this.kill());
   }
 
   public override onPostUpdate(engine: Engine, elapsed: number): void {
@@ -105,7 +108,9 @@ export class Dragon extends Ennemy {
   ): void {
     if (other.owner instanceof HeroBullet) {
       this.graphics.use(DragonAnimation.Hit);
-      Resources.Sounds.Impact.play();
+      Resources.Sounds.Impact.play({
+        volume: 0.5,
+      });
       this.hp -= 1;
       this.actions
         .delay(500)

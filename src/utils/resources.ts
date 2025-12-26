@@ -16,6 +16,10 @@ export const Resources = {
     ),
     Dragon: new ImageSource("./images/enemies/dragon.png"),
     AncientDragon: new ImageSource("./images/enemies/ancient-dragon.png"),
+    Cloud1: new ImageSource("./images/clouds/cloud1.png"),
+    Cloud2: new ImageSource("./images/clouds/cloud2.png"),
+    Cloud3: new ImageSource("./images/clouds/cloud3.png"),
+    Cloud4: new ImageSource("./images/clouds/cloud4.png"),
   },
   // Sounds
   Sounds: {
@@ -27,6 +31,10 @@ export const Resources = {
     LevelUp: new Sound("./sounds/level-up.wav"),
     ImpactBoss: new Sound("./sounds/impact-boss.wav"),
     ImpactInvincible: new Sound("./sounds/impact-invincible.mp3"),
+    ScoreUp: new Sound("./sounds/score-up.wav"),
+  },
+  Musics: {
+    Bgm: new Sound("./musics/bgm.mp3"),
   },
 } as const;
 
@@ -39,5 +47,9 @@ for (const res of Object.values(Resources.Images)) {
 }
 
 for (const res of Object.values(Resources.Sounds)) {
+  loader.addResource(res);
+}
+
+for (const res of Object.values(Resources.Musics)) {
   loader.addResource(res);
 }

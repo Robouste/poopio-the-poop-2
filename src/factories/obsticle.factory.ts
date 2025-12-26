@@ -1,12 +1,13 @@
 import { Resources } from "@utils/resources";
-import { Random, Scene, Timer } from "excalibur";
+import { Random, Timer } from "excalibur";
 import { Obsticle } from "../actors/obsticle.actor";
+import { GameScene } from "../scenes/game.scene";
 
 export class ObsticleFactory {
   private _timer: Timer;
   private _random: Random = new Random();
 
-  constructor(private _scene: Scene) {
+  constructor(private _scene: GameScene) {
     this._timer = new Timer({
       interval: 1000,
       repeats: true,
@@ -38,7 +39,7 @@ export class ObsticleFactory {
       obsticleType === 1
         ? Resources.Images.Obsticle1
         : Resources.Images.Obsticle2;
-    const obsticle = new Obsticle(imageSource, this._scene.engine);
+    const obsticle = new Obsticle(imageSource, this._scene);
 
     this._scene.add(obsticle);
   }

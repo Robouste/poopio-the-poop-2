@@ -8,25 +8,29 @@ import {
   Side,
   vec,
 } from "excalibur";
+import { GameScene } from "../scenes/game.scene";
 import { Ennemy } from "./ennemy.base";
 import { HeroBullet } from "./hero-bullet.actor";
 
 export class Obsticle extends Ennemy {
   public isInvincible = true;
+  public scoreValue = 10;
 
   private _baseY = 0;
   private _t = 0; // seconds
 
-  // tweak these
+  // Oscillation parameters
   private _amplitude = 8; // pixels up/down
   private _frequency = 1.5; // oscillations per second (Hz)
 
-  constructor(private _image: ImageSource, engine: Engine) {
+  constructor(private _image: ImageSource, gameScene: GameScene) {
     const baseY =
-      engine.screen.drawHeight - Config.GroundHeight - Config.ObsticleHeight;
+      gameScene.engine.screen.drawHeight -
+      Config.GroundHeight -
+      Config.ObsticleHeight;
 
-    super({
-      pos: vec(engine.screen.drawWidth, baseY),
+    super(gameScene, {
+      pos: vec(gameScene.engine.screen.drawWidth, baseY),
       width: Config.ObsticleWidth,
       height: Config.ObsticleHeight,
       vel: vec(-Config.BaseSpeed, 0),
@@ -35,14 +39,14 @@ export class Obsticle extends Ennemy {
     this._baseY = baseY;
   }
 
-  public override onInitialize(): void {
+  public override onInitialize(engine: Engine): void {
+    super.onInitialize(engine);
+
     const image = this._image.toSprite();
     image.destSize.height = Config.ObsticleHeight;
     image.destSize.width = Config.ObsticleWidth;
 
     this.graphics.use(image);
-
-    this.on("exitviewport", () => this.kill());
   }
 
   public override onPreUpdate(engine: Engine, elapsed: number): void {

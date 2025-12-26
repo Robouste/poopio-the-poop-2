@@ -1,74 +1,143 @@
-import {
-  DefaultLoader,
-  Engine,
-  ExcaliburGraphicsContext,
-  Scene,
-  SceneActivationContext,
-} from "excalibur";
+import { Resources } from "@utils/resources";
+import { Color, Engine, Font, Label, Scene, TextAlign, vec } from "excalibur";
 import { Ground } from "../actors/ground.actor";
 import { Hero } from "../actors/hero.actor";
+import { CloudFactory } from "../factories/cloud.factory";
 import { DragonFactory } from "../factories/dragon.factory";
 import { ObsticleFactory } from "../factories/obsticle.factory";
+
+const bestScoreKey = "ptp2-best-score";
+const labelsOffset = 10;
 
 export class GameScene extends Scene {
   private _ground!: Ground;
   private _hero!: Hero;
   private _obsticleFactory = new ObsticleFactory(this);
-  private _dragonFactory!: DragonFactory;
+  private _cloudFactory = new CloudFactory(this);
+  private _dragonFactory = new DragonFactory(this);
+
+  private _scoreLabel = new Label({
+    text: "Score: 0",
+    x: labelsOffset,
+    y: labelsOffset,
+    z: 1,
+    font: new Font({
+      size: 20,
+      color: Color.White,
+    }),
+  });
+  private _bestLabel!: Label;
+  private _startGameLabel!: Label;
+  private _best = 0;
+  private _score = 0;
 
   override onInitialize(engine: Engine): void {
-    this._hero = new Hero(engine);
+    this._hero = new Hero(engine, this);
     this.add(this._hero);
 
     this._ground = new Ground(engine);
     this.add(this._ground);
 
-    this._dragonFactory = new DragonFactory(this, this._hero);
-
-    this._start();
+    this._initLabels(engine);
+    this._showStartInstructions();
   }
 
-  override onPreLoad(loader: DefaultLoader): void {
-    // Add any scene specific resources to load
+  public incrementScore(amount: number): void {
+    Resources.Sounds.ScoreUp.play({
+      volume: 0.1,
+    });
+    this._score += amount;
+    this._scoreLabel.text = `Score: ${this._score}`;
   }
 
-  override onActivate(context: SceneActivationContext<unknown>): void {
-    // Called when Excalibur transitions to this scene
-    // Only 1 scene is active at a time
-  }
+  public gameOver(): void {
+    Resources.Sounds.GameOver.play();
+    this._setBestScore(this._score);
+    this._stop();
 
-  override onDeactivate(context: SceneActivationContext): void {
-    // Called when Excalibur transitions away from this scene
-    // Only 1 scene is active at a time
-  }
-
-  override onPreUpdate(engine: Engine, elapsedMs: number): void {
-    // Called before anything updates in the scene
-  }
-
-  override onPostUpdate(engine: Engine, elapsedMs: number): void {
-    // Called after everything updates in the scene
-  }
-
-  override onPreDraw(ctx: ExcaliburGraphicsContext, elapsedMs: number): void {
-    // Called before Excalibur draws to the screen
-  }
-
-  override onPostDraw(ctx: ExcaliburGraphicsContext, elapsedMs: number): void {
-    // Called after Excalibur draws to the screen
+    this._showStartInstructions();
   }
 
   private _start(): void {
+    Resources.Musics.Bgm.loop = true;
+    Resources.Musics.Bgm.play();
+
     this._ground.start();
     this._hero.start();
     this._obsticleFactory.start();
     this._dragonFactory.start();
+    this._cloudFactory.start();
   }
 
   private _stop(): void {
+    Resources.Musics.Bgm.stop();
     this._ground.stop();
     this._hero.stop();
     this._obsticleFactory.stop();
     this._dragonFactory.stop();
+    this._cloudFactory.stop();
+  }
+
+  private _initLabels(engine: Engine): void {
+    this._startGameLabel = new Label({
+      text: "Touch anything to start",
+      x: engine.screen.drawWidth / 2,
+      y: engine.screen.drawHeight / 2,
+      z: 3,
+      font: new Font({
+        size: 30,
+        color: Color.White,
+        textAlign: TextAlign.Center,
+      }),
+    });
+
+    this._bestLabel = new Label({
+      text: "Best: 0",
+      x: engine.screen.drawWidth - labelsOffset,
+      y: labelsOffset,
+      z: 1,
+      anchor: vec(1, 0),
+      font: new Font({
+        size: 20,
+        color: Color.White,
+        textAlign: TextAlign.Right,
+      }),
+    });
+
+    this.add(this._scoreLabel);
+    this.add(this._bestLabel);
+    this.add(this._startGameLabel);
+
+    const bestScore = localStorage.getItem(bestScoreKey);
+
+    if (bestScore) {
+      this._best = +bestScore;
+      this._setBestScore(this._best);
+    } else {
+      this._setBestScore(0);
+    }
+  }
+
+  private _showStartInstructions(): void {
+    this._startGameLabel.graphics.isVisible = true;
+
+    const restart = () => {
+      this._start();
+      this._startGameLabel.graphics.isVisible = false;
+      this._score = 0;
+      this._scoreLabel.text = `Score: ${this._score}`;
+    };
+
+    this.engine.input.pointers.once("down", restart);
+    this.engine.input.keyboard.once("press", restart);
+  }
+
+  private _setBestScore(score: number): void {
+    if (score > this._best) {
+      localStorage.setItem(bestScoreKey, score.toString());
+      this._best = score;
+    }
+
+    this._bestLabel.text = `Best: ${this._best}`;
   }
 }

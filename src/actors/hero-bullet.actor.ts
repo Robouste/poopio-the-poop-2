@@ -31,6 +31,8 @@ export class HeroBullet extends Actor {
   public override onInitialize(_engine: Engine): void {
     this._initializeBullet();
     this._initializeImpactAnimation();
+
+    this.on("exitviewport", () => this.kill());
   }
 
   public override onCollisionStart(
@@ -78,7 +80,9 @@ export class HeroBullet extends Actor {
     this.graphics.add("bullet", animation);
     this.graphics.use("bullet");
 
-    Resources.Sounds.Fire.play();
+    Resources.Sounds.Fire.play({
+      volume: 0.5,
+    });
   }
 
   private _initializeImpactAnimation(): void {
