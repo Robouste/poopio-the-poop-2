@@ -73,7 +73,7 @@ export class Hero extends Actor {
     this._runAnimation = Animation.fromSpriteSheet(
       spriteSheet,
       range(0, 17),
-      100,
+      50,
       AnimationStrategy.Loop
     );
 
@@ -95,32 +95,10 @@ export class Hero extends Actor {
     this._initControls(engine);
   }
 
-  override onPreUpdate(engine: Engine, elapsedMs: number): void {
-    // Put any update logic here runs every frame before Actor builtins
-  }
-
   override onPostUpdate(engine: Engine, elapsedMs: number): void {
     if (!this._isPlaying) {
       return;
     }
-  }
-
-  override onPreCollisionResolve(
-    self: Collider,
-    other: Collider,
-    side: Side,
-    contact: CollisionContact
-  ): void {
-    // Called before a collision is resolved, if you want to opt out of this specific collision call contact.cancel()
-  }
-
-  override onPostCollisionResolve(
-    self: Collider,
-    other: Collider,
-    side: Side,
-    contact: CollisionContact
-  ): void {
-    // Called every time a collision is resolved and overlap is solved
   }
 
   override onCollisionStart(
@@ -133,15 +111,6 @@ export class Hero extends Actor {
       this._noOfJumps = 2;
       this.graphics.use(HeroAnimation.Run);
     }
-  }
-
-  override onCollisionEnd(
-    self: Collider,
-    other: Collider,
-    side: Side,
-    lastContact: CollisionContact
-  ): void {
-    // Called when a pair of objects separates
   }
 
   public start(): void {

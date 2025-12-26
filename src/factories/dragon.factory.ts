@@ -38,7 +38,7 @@ export class DragonFactory {
       Config.GroundHeight -
       Config.ObsticleHeight -
       100;
-    const maxY = minY - 300;
+    const maxY = minY - 250;
 
     const dragon = new Dragon(
       vec(this._scene.engine.drawWidth, this._random.integer(maxY, minY))

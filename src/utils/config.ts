@@ -1,5 +1,5 @@
 export const Config = {
-  GroundHeight: 96,
+  GroundHeight: 200,
   BaseSpeed: 200,
   ProjectileSpeed: 1000,
   HeroJumpVelocity: -425,
