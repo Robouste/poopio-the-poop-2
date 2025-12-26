@@ -11,6 +11,11 @@ export const Resources = {
     HeroBullet: new ImageSource("./images/bullets/hero-bullet.png"),
     Obsticle1: new ImageSource("./images/obsticles/plunger.png"),
     Obsticle2: new ImageSource("./images/obsticles/toilet-paper.png"),
+    ImpactInvincibleEffect: new ImageSource(
+      "./images/bullets/impact-invincible-effect.png"
+    ),
+    Dragon: new ImageSource("./images/enemies/dragon.png"),
+    AncientDragon: new ImageSource("./images/enemies/ancient-dragon.png"),
   },
   // Sounds
   Sounds: {
@@ -21,6 +26,7 @@ export const Resources = {
     Impact: new Sound("./sounds/impact.wav"),
     LevelUp: new Sound("./sounds/level-up.wav"),
     ImpactBoss: new Sound("./sounds/impact-boss.wav"),
+    ImpactInvincible: new Sound("./sounds/impact-invincible.mp3"),
   },
 } as const;
 

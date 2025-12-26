@@ -7,12 +7,14 @@ import {
 } from "excalibur";
 import { Ground } from "../actors/ground.actor";
 import { Hero } from "../actors/hero.actor";
+import { DragonFactory } from "../factories/dragon.factory";
 import { ObsticleFactory } from "../factories/obsticle.factory";
 
 export class GameScene extends Scene {
   private _ground!: Ground;
   private _hero!: Hero;
   private _obsticleFactory = new ObsticleFactory(this);
+  private _dragonFactory!: DragonFactory;
 
   override onInitialize(engine: Engine): void {
     this._hero = new Hero(engine);
@@ -20,6 +22,8 @@ export class GameScene extends Scene {
 
     this._ground = new Ground(engine);
     this.add(this._ground);
+
+    this._dragonFactory = new DragonFactory(this, this._hero);
 
     this._start();
   }
@@ -58,10 +62,13 @@ export class GameScene extends Scene {
     this._ground.start();
     this._hero.start();
     this._obsticleFactory.start();
+    this._dragonFactory.start();
   }
 
   private _stop(): void {
     this._ground.stop();
     this._hero.stop();
+    this._obsticleFactory.stop();
+    this._dragonFactory.stop();
   }
 }

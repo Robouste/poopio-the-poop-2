@@ -4,24 +4,60 @@ import {
   Actor,
   Animation,
   AnimationStrategy,
+  Collider,
+  CollisionContact,
   Engine,
   range,
+  Side,
   SpriteSheet,
   vec,
   Vector,
 } from "excalibur";
+import { Ennemy } from "./ennemy.base";
 
 export class HeroBullet extends Actor {
+  private _impactInvincibleAnimation!: Animation;
+  private _impactAnimation!: Animation;
+
   constructor(pos: Vector) {
     super({
       pos,
       acc: vec(Config.ProjectileSpeed, 0),
-      width: 36,
+      width: 48,
       height: 16,
     });
   }
 
-  public override onInitialize(engine: Engine): void {
+  public override onInitialize(_engine: Engine): void {
+    this._initializeBullet();
+    this._initializeImpactAnimation();
+  }
+
+  public override onCollisionStart(
+    self: Collider,
+    other: Collider,
+    side: Side,
+    contact: CollisionContact
+  ): void {
+    if (other.owner instanceof Ennemy) {
+      const effect = new Actor({
+        pos: this.pos,
+        width: 48,
+        height: 48,
+      });
+
+      const animation = other.owner.isInvincible
+        ? this._impactInvincibleAnimation
+        : this._impactAnimation;
+
+      effect.graphics.use(animation);
+      animation.events.on("end", () => effect.kill());
+      this.scene?.add(effect);
+      this.kill();
+    }
+  }
+
+  private _initializeBullet(): void {
     const spriteSheet = SpriteSheet.fromImageSource({
       image: Resources.Images.HeroBullet,
       grid: {
@@ -43,5 +79,41 @@ export class HeroBullet extends Actor {
     this.graphics.use("bullet");
 
     Resources.Sounds.Fire.play();
+  }
+
+  private _initializeImpactAnimation(): void {
+    const invincibleSpriteSheet = SpriteSheet.fromImageSource({
+      image: Resources.Images.ImpactInvincibleEffect,
+      grid: {
+        rows: 1,
+        columns: 9,
+        spriteWidth: 48,
+        spriteHeight: 48,
+      },
+    });
+
+    this._impactInvincibleAnimation = Animation.fromSpriteSheet(
+      invincibleSpriteSheet,
+      range(0, 8),
+      50,
+      AnimationStrategy.End
+    );
+
+    const impactSpriteSheet = SpriteSheet.fromImageSource({
+      image: Resources.Images.ImpactInvincibleEffect,
+      grid: {
+        rows: 1,
+        columns: 14,
+        spriteWidth: 48,
+        spriteHeight: 48,
+      },
+    });
+
+    this._impactAnimation = Animation.fromSpriteSheet(
+      impactSpriteSheet,
+      range(0, 13),
+      50,
+      AnimationStrategy.End
+    );
   }
 }
