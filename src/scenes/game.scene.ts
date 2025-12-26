@@ -26,6 +26,8 @@ export class GameScene extends Scene {
       color: Color.White,
     }),
   });
+  private _jumpLabel!: Label;
+  private _shootLabel!: Label;
   private _bestLabel!: Label;
   private _startGameLabel!: Label;
   private _best = 0;
@@ -104,9 +106,35 @@ export class GameScene extends Scene {
       }),
     });
 
+    this._jumpLabel = new Label({
+      text: "Jump: Space / Left Click / Tap Left",
+      x: this._startGameLabel.pos.x,
+      y: this._startGameLabel.pos.y + 40,
+      z: 1,
+      font: new Font({
+        size: 16,
+        color: Color.White,
+        textAlign: TextAlign.Center,
+      }),
+    });
+
+    this._shootLabel = new Label({
+      text: "Shoot: Enter / Right Click / Tap Right",
+      x: this._startGameLabel.pos.x,
+      y: this._jumpLabel.pos.y + 25,
+      z: 1,
+      font: new Font({
+        size: 16,
+        color: Color.White,
+        textAlign: TextAlign.Center,
+      }),
+    });
+
     this.add(this._scoreLabel);
     this.add(this._bestLabel);
     this.add(this._startGameLabel);
+    this.add(this._jumpLabel);
+    this.add(this._shootLabel);
 
     const bestScore = localStorage.getItem(bestScoreKey);
 
@@ -120,10 +148,14 @@ export class GameScene extends Scene {
 
   private _showStartInstructions(): void {
     this._startGameLabel.graphics.isVisible = true;
+    this._jumpLabel.graphics.isVisible = true;
+    this._shootLabel.graphics.isVisible = true;
 
     const restart = () => {
       this._start();
       this._startGameLabel.graphics.isVisible = false;
+      this._jumpLabel.graphics.isVisible = false;
+      this._shootLabel.graphics.isVisible = false;
       this._score = 0;
       this._scoreLabel.text = `Score: ${this._score}`;
     };
