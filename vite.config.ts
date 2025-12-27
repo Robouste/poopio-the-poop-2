@@ -1,4 +1,5 @@
-import { defineConfig, type Plugin } from "vite";
+import { defineConfig, Plugin } from "vite";
+import checker from "vite-plugin-checker";
 import tsconfigPaths from "vite-tsconfig-paths";
 
 // if you use tiled maps
@@ -20,7 +21,13 @@ const tiledPlugin = (): Plugin => {
 
 export default defineConfig({
   base: "./", // optionally give a base path, useful for itch.io to serve relative instead of the default absolut
-  plugins: [tiledPlugin(), tsconfigPaths()], // hint vite that tiled tilesets should be treated as external
+  plugins: [
+    tiledPlugin(),
+    tsconfigPaths(),
+    checker({
+      typescript: true,
+    }),
+  ], // hint vite that tiled tilesets should be treated as external
   // currently excalibur plugins are commonjs
   // this forces vite to keep things from bundling ESM together with commonjs
   optimizeDeps: {

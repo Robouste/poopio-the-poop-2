@@ -12,6 +12,15 @@ import { GameScene } from "../scenes/game.scene";
 import { Ennemy } from "./ennemy.base";
 import { HeroBullet } from "./hero-bullet.actor";
 
+export const obsticleTypes = ["Plunger", "ToiletPaper"] as const;
+export type ObsticleType = (typeof obsticleTypes)[number];
+export type ObsticleConfig = {
+  image: ImageSource;
+  width: number;
+  height: number;
+  collider?: Collider;
+};
+
 export class Obsticle extends Ennemy {
   public isInvincible = true;
   public scoreValue = 10;
@@ -23,17 +32,15 @@ export class Obsticle extends Ennemy {
   private _amplitude = 8; // pixels up/down
   private _frequency = 1.5; // oscillations per second (Hz)
 
-  constructor(private _image: ImageSource, gameScene: GameScene) {
-    const baseY =
-      gameScene.engine.screen.drawHeight -
-      Config.GroundHeight -
-      Config.ObsticleHeight;
+  constructor(private _config: ObsticleConfig, gameScene: GameScene) {
+    const baseY = gameScene.engine.screen.drawHeight - Config.GroundHeight - 48;
 
     super(gameScene, {
       pos: vec(gameScene.engine.screen.drawWidth, baseY),
-      width: Config.ObsticleWidth,
-      height: Config.ObsticleHeight,
+      width: _config.width,
+      height: _config.height,
       vel: vec(-Config.BaseSpeed, 0),
+      anchor: vec(0, 0.5),
     });
 
     this._baseY = baseY;
@@ -42,9 +49,14 @@ export class Obsticle extends Ennemy {
   public override onInitialize(engine: Engine): void {
     super.onInitialize(engine);
 
-    const image = this._image.toSprite();
-    image.destSize.height = Config.ObsticleHeight;
-    image.destSize.width = Config.ObsticleWidth;
+    const image = this._config.image.toSprite();
+    image.destSize.height = this._config.height;
+    image.destSize.width = this._config.width;
+
+    if (this._config.collider) {
+      this.anchor.setTo(0.5, 0.5);
+      this.collider.set(this._config.collider);
+    }
 
     this.graphics.use(image);
   }

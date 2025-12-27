@@ -3,6 +3,5 @@ export const Config = {
   BaseSpeed: 200,
   ProjectileSpeed: 1000,
   HeroJumpVelocity: -425,
-  ObsticleWidth: 48,
-  ObsticleHeight: 48,
+  ObsticleMaxHeight: 64,
 } as const;

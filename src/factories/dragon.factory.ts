@@ -36,7 +36,7 @@ export class DragonFactory {
     const minY =
       this._scene.engine.drawHeight -
       Config.GroundHeight -
-      Config.ObsticleHeight -
+      Config.ObsticleMaxHeight -
       100;
     const maxY = minY - 250;
 

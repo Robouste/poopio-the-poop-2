@@ -7,8 +7,11 @@ export abstract class Ennemy extends Actor {
 
   private _scoreAddedLabel!: Label;
 
-  constructor(protected gameScene: GameScene, config: ActorArgs | undefined) {
-    super(config);
+  constructor(
+    protected gameScene: GameScene,
+    actorArgs: ActorArgs | undefined
+  ) {
+    super(actorArgs);
 
     this.on("defeated", () => {
       this.gameScene.incrementScore(this.scoreValue);
