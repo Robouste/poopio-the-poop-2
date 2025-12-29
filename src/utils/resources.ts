@@ -20,6 +20,8 @@ export const Resources = {
     Cloud2: new ImageSource("./images/clouds/cloud2.png"),
     Cloud3: new ImageSource("./images/clouds/cloud3.png"),
     Cloud4: new ImageSource("./images/clouds/cloud4.png"),
+    HealthBar: new ImageSource("./images/ui/health-bar.png"),
+    HealthBarBorder: new ImageSource("./images/ui/health-bar-border.png"),
   },
   // Sounds
   Sounds: {

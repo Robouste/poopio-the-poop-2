@@ -20,7 +20,7 @@ import {
 } from "excalibur";
 import { GameScene } from "../scenes/game.scene";
 import { Resources } from "../utils/resources";
-import { Ennemy } from "./ennemy.base";
+import { Enemy } from "./enemy.base";
 import { Ground } from "./ground.actor";
 import { HeroBullet } from "./hero-bullet.actor";
 
@@ -114,8 +114,8 @@ export class Hero extends Actor {
       this.graphics.use(HeroAnimation.Run);
     }
 
-    if (other.owner instanceof Ennemy) {
-      this._gameScene.gameOver();
+    if (other.owner instanceof Enemy) {
+      // this._gameScene.gameOver();
     }
   }
 

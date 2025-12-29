@@ -7,6 +7,7 @@ import {
   obsticleTypes,
 } from "../actors/obsticle.actor";
 import { GameScene } from "../scenes/game.scene";
+import { Factory } from "./factory.base";
 
 const obsticleConfigs: Record<ObsticleType, ObsticleConfig> = {
   Plunger: {
@@ -21,11 +22,13 @@ const obsticleConfigs: Record<ObsticleType, ObsticleConfig> = {
   },
 };
 
-export class ObsticleFactory {
+export class ObsticleFactory extends Factory {
   private _timer: Timer;
   private _random: Random = new Random();
 
   constructor(private _scene: GameScene) {
+    super();
+
     this._timer = new Timer({
       interval: 1000,
       repeats: true,

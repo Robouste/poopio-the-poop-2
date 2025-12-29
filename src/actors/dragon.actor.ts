@@ -13,34 +13,23 @@ import {
   Vector,
 } from "excalibur";
 import { GameScene } from "../scenes/game.scene";
-import { Ennemy } from "./ennemy.base";
 import { HeroBullet } from "./hero-bullet.actor";
 import { Hero } from "./hero.actor";
+import { KillableEnemy } from "./killable-enemy.base";
 
 enum DragonAnimation {
   Fly = "fly",
   Hit = "hit",
 }
 
-export class Dragon extends Ennemy {
+export class Dragon extends KillableEnemy {
   public isInvincible = false;
   public scoreValue = 50;
-
-  public get hp(): number {
-    return this._hp;
-  }
-  public set hp(value: number) {
-    this._hp = value;
-
-    if (this._hp <= 0) {
-      this.emit("defeated");
-    }
-  }
 
   private _flyAnimation!: Animation;
   private _hitAnimation!: Animation;
   private _hero!: Hero;
-  private _hp = 3;
+  protected healthPoint = 3;
 
   constructor(pos: Vector, gameScene: GameScene) {
     super(gameScene, {

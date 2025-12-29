@@ -15,6 +15,7 @@ export class GameScene extends Scene {
   private _obsticleFactory = new ObsticleFactory(this);
   private _cloudFactory = new CloudFactory(this);
   private _dragonFactory = new DragonFactory(this);
+  private _isPlaying = false;
 
   private _scoreLabel = new Label({
     text: "Score: 0",
@@ -61,8 +62,9 @@ export class GameScene extends Scene {
   }
 
   private _start(): void {
-    Resources.Musics.Bgm.loop = true;
-    Resources.Musics.Bgm.play();
+    this._isPlaying = true;
+    // Resources.Musics.Bgm.loop = true;
+    // Resources.Musics.Bgm.play();
 
     this._ground.start();
     this._hero.start();
@@ -72,6 +74,7 @@ export class GameScene extends Scene {
   }
 
   private _stop(): void {
+    this._isPlaying = false;
     Resources.Musics.Bgm.stop();
     this._ground.stop();
     this._hero.stop();
@@ -152,6 +155,10 @@ export class GameScene extends Scene {
     this._shootLabel.graphics.isVisible = true;
 
     const restart = () => {
+      if (this._isPlaying) {
+        return;
+      }
+
       this._start();
       this._startGameLabel.graphics.isVisible = false;
       this._jumpLabel.graphics.isVisible = false;
@@ -171,5 +178,10 @@ export class GameScene extends Scene {
     }
 
     this._bestLabel.text = `Best: ${this._best}`;
+  }
+
+  private _initBossStage(): void {
+    this._obsticleFactory.stop();
+    this._dragonFactory.setAmount(3);
   }
 }

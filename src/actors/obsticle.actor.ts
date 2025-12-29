@@ -9,7 +9,7 @@ import {
   vec,
 } from "excalibur";
 import { GameScene } from "../scenes/game.scene";
-import { Ennemy } from "./ennemy.base";
+import { Enemy } from "./enemy.base";
 import { HeroBullet } from "./hero-bullet.actor";
 
 export const obsticleTypes = ["Plunger", "ToiletPaper"] as const;
@@ -21,7 +21,7 @@ export type ObsticleConfig = {
   collider?: Collider;
 };
 
-export class Obsticle extends Ennemy {
+export class Obsticle extends Enemy {
   public isInvincible = true;
   public scoreValue = 10;
 

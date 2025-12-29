@@ -1,7 +1,7 @@
 import { Actor, ActorArgs, Color, Font, Label, vec } from "excalibur";
 import { GameScene } from "../scenes/game.scene";
 
-export abstract class Ennemy extends Actor {
+export abstract class Enemy extends Actor {
   public abstract isInvincible: boolean;
   public abstract scoreValue: number;
 

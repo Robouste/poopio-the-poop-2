@@ -13,7 +13,7 @@ import {
   vec,
   Vector,
 } from "excalibur";
-import { Ennemy } from "./ennemy.base";
+import { Enemy } from "./enemy.base";
 
 export class HeroBullet extends Actor {
   private _impactInvincibleAnimation!: Animation;
@@ -41,7 +41,7 @@ export class HeroBullet extends Actor {
     side: Side,
     contact: CollisionContact
   ): void {
-    if (other.owner instanceof Ennemy) {
+    if (other.owner instanceof Enemy) {
       const effect = new Actor({
         pos: this.pos,
         width: 48,
