@@ -1,5 +1,7 @@
+import { Config } from "@utils/config";
 import { Resources } from "@utils/resources";
 import { Color, Engine, Font, Label, Scene, TextAlign, vec } from "excalibur";
+import { AncientDragon } from "../actors/ancient-dragon.actor";
 import { Ground } from "../actors/ground.actor";
 import { Hero } from "../actors/hero.actor";
 import { CloudFactory } from "../factories/cloud.factory";
@@ -63,14 +65,15 @@ export class GameScene extends Scene {
 
   private _start(): void {
     this._isPlaying = true;
-    // Resources.Musics.Bgm.loop = true;
-    // Resources.Musics.Bgm.play();
+    Resources.Musics.Bgm.loop = true;
+    Resources.Musics.Bgm.play();
 
     this._ground.start();
     this._hero.start();
     this._obsticleFactory.start();
     this._dragonFactory.start();
     this._cloudFactory.start();
+    this._initBossStage();
   }
 
   private _stop(): void {
@@ -183,5 +186,16 @@ export class GameScene extends Scene {
   private _initBossStage(): void {
     this._obsticleFactory.stop();
     this._dragonFactory.setAmount(3);
+    const boss = new AncientDragon(
+      vec(
+        this.engine.screen.drawWidth,
+        this.engine.screen.drawHeight -
+          Config.GroundHeight -
+          Config.ObsticleMaxHeight -
+          100
+      ),
+      this
+    );
+    this.add(boss);
   }
 }
