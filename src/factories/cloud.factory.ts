@@ -21,12 +21,22 @@ export class CloudFactory {
     this._timer.start();
   }
 
+  public reset(): void {
+    this._timer.reset();
+
+    for (const actor of this._scene.actors) {
+      if (actor instanceof Cloud) {
+        actor.kill();
+      }
+    }
+  }
+
   public stop(): void {
     this._timer.stop();
 
     for (const actor of this._scene.actors) {
       if (actor instanceof Cloud) {
-        actor.kill();
+        actor.stop();
       }
     }
   }

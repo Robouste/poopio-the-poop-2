@@ -40,8 +40,14 @@ export const Resources = {
     Shockwave: new Sound("./sounds/attacks/shockwave.mp3"),
   },
   Musics: {
-    Bgm: new Sound("./musics/bgm.mp3"),
-    Boss: new Sound("./musics/boss.mp3"),
+    Bgm: new Sound({
+      paths: ["./musics/bgm.mp3"],
+      loop: true,
+    }),
+    Boss: new Sound({
+      paths: ["./musics/boss.mp3"],
+      loop: true,
+    }),
   },
 } as const;
 

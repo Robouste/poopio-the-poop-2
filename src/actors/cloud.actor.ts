@@ -22,4 +22,8 @@ export class Cloud extends Actor {
 
     this.on("exitviewport", () => this.kill());
   }
+
+  public stop(): void {
+    this.vel = vec(0, 0);
+  }
 }

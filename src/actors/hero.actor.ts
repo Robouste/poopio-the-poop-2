@@ -17,6 +17,7 @@ import {
   Sprite,
   SpriteSheet,
   vec,
+  Vector,
 } from "excalibur";
 import { GameScene } from "../scenes/game.scene";
 import { Resources } from "../utils/resources";
@@ -49,17 +50,25 @@ export class Hero extends Actor {
   private _startSprite!: Sprite;
   private _noOfJumps = 2;
   private _isPlaying = false;
+  private _startingPos: Vector;
 
   constructor(engine: Engine, private _gameScene: GameScene) {
+    const startingPos = vec(
+      50,
+      engine.screen.drawHeight - Config.GroundHeight - 84
+    );
+
     super({
       name: "Hero",
-      pos: vec(50, engine.screen.drawHeight - Config.GroundHeight - 84),
+      pos: startingPos,
       width: 32,
       height: 84,
       z: 2,
       // anchor: vec(0, 0), // Actors default center colliders and graphics with anchor (0.5, 0.5)
       collisionType: CollisionType.Active, // Collision Type Active means this participates in collisions read more https://excaliburjs.com/docs/collisiontypes
     });
+
+    this._startingPos = startingPos;
   }
 
   override onInitialize(engine: Engine) {
@@ -119,17 +128,23 @@ export class Hero extends Actor {
       other.owner instanceof Enemy ||
       other.owner instanceof EnemyProjectile
     ) {
-      // this._gameScene.gameOver();
+      this._gameScene.gameOver();
     }
   }
 
   public start(): void {
     this._isPlaying = true;
     this._noOfJumps = 2;
+    this.graphics.use(HeroAnimation.Run);
+    this.pos.setTo(this._startingPos.x, this._startingPos.y);
+    this.body.useGravity = true;
   }
 
   public stop(): void {
     this._isPlaying = false;
+    this.body.useGravity = false;
+    this.vel.setTo(0, 0);
+    this.graphics.use(HeroAnimation.Start);
   }
 
   private _initControls(engine: Engine): void {

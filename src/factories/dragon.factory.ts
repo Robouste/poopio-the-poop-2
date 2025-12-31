@@ -26,12 +26,22 @@ export class DragonFactory extends Factory {
     this._timer.start();
   }
 
+  public reset(): void {
+    this._timer.reset();
+
+    for (const actor of this._scene.actors) {
+      if (actor instanceof Dragon) {
+        actor.kill();
+      }
+    }
+  }
+
   public stop(): void {
     this._timer.stop();
 
     for (const actor of this._scene.actors) {
       if (actor instanceof Dragon) {
-        actor.kill();
+        actor.stop();
       }
     }
   }

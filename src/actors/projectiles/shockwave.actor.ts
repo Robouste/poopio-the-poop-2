@@ -43,7 +43,7 @@ export class Shockwave extends EnemyProjectile {
 
     const animation = Animation.fromSpriteSheet(
       spriteSheet,
-      range(0, 7),
+      range(0, 4),
       50,
       AnimationStrategy.Loop
     );

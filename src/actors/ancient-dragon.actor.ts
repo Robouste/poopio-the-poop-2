@@ -101,10 +101,18 @@ export class AncientDragon extends KillableEnemy {
       duration: 2000,
     });
 
-    this._fireOrbTimer.start();
-    this._shockwaveTimer.start();
     this.scene?.add(this._fireOrbTimer);
     this.scene?.add(this._shockwaveTimer);
+
+    this._fireOrbTimer.start();
+    this._shockwaveTimer.start();
+
+    this.on("kill", () => {
+      this._shockwaveTimer.cancel();
+      this._fireOrbTimer.cancel();
+      this.scene?.remove(this._shockwaveTimer);
+      this.scene?.remove(this._fireOrbTimer);
+    });
   }
 
   private _castFireOrb(gameScene: GameScene): void {

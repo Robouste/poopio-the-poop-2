@@ -27,6 +27,7 @@ export class Dragon extends KillableEnemy {
   protected hitAnimationName = DragonAnimation.Hit;
 
   private _hero!: Hero;
+  private _isStopped = false;
 
   constructor(pos: Vector, gameScene: GameScene) {
     super(gameScene, {
@@ -79,10 +80,21 @@ export class Dragon extends KillableEnemy {
   }
 
   public override onPostUpdate(engine: Engine, elapsed: number): void {
+    super.onPostUpdate(engine, elapsed);
+
+    if (this._isStopped) {
+      return;
+    }
+
     const heroPos = this._hero.pos;
 
     const direction = heroPos.sub(this.pos);
     const velocity = direction.normalize().scale(Config.BaseSpeed);
     this.vel = velocity;
+  }
+
+  public stop(): void {
+    this._isStopped = true;
+    this.vel.setTo(0, 0);
   }
 }

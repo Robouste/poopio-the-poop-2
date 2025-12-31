@@ -35,7 +35,11 @@ export abstract class KillableEnemy extends Enemy {
   public override onInitialize(engine: Engine): void {
     super.onInitialize(engine);
 
-    this.healthBar = new HealthBar(this.width, vec(0, 40), this.healthPoint);
+    this.healthBar = new HealthBar(
+      this.width,
+      vec(0, this.height / 2 + 10),
+      this.healthPoint
+    );
     this.addChild(this.healthBar);
   }
 

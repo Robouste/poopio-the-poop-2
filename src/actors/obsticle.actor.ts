@@ -32,6 +32,8 @@ export class Obsticle extends Enemy {
   private _amplitude = 8; // pixels up/down
   private _frequency = 1.5; // oscillations per second (Hz)
 
+  private _isStopped = false;
+
   constructor(private _config: ObsticleConfig, gameScene: GameScene) {
     const baseY = gameScene.engine.screen.drawHeight - Config.GroundHeight - 48;
 
@@ -64,6 +66,10 @@ export class Obsticle extends Enemy {
   public override onPreUpdate(engine: Engine, elapsed: number): void {
     super.onPreUpdate(engine, elapsed);
 
+    if (this._isStopped) {
+      return;
+    }
+
     this._t += elapsed / 1000;
 
     // y = base + sin(2π f t) * amplitude
@@ -81,5 +87,10 @@ export class Obsticle extends Enemy {
     if (other.owner instanceof HeroBullet) {
       Resources.Sounds.ImpactInvincible.play();
     }
+  }
+
+  public stop(): void {
+    this._isStopped = true;
+    this.vel.setTo(0, 0);
   }
 }

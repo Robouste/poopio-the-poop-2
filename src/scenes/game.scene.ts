@@ -1,9 +1,20 @@
 import { Config } from "@utils/config";
 import { Resources } from "@utils/resources";
-import { Color, Engine, Font, Label, Scene, TextAlign, vec } from "excalibur";
+import {
+  Color,
+  Engine,
+  Font,
+  Label,
+  Scene,
+  TextAlign,
+  Timer,
+  vec,
+} from "excalibur";
 import { AncientDragon } from "../actors/ancient-dragon.actor";
+import { Background } from "../actors/background.actor";
 import { Ground } from "../actors/ground.actor";
 import { Hero } from "../actors/hero.actor";
+import { LightningFlash } from "../actors/lightning-flash.actor";
 import { CloudFactory } from "../factories/cloud.factory";
 import { DragonFactory } from "../factories/dragon.factory";
 import { ObsticleFactory } from "../factories/obsticle.factory";
@@ -18,6 +29,8 @@ export class GameScene extends Scene {
   private _cloudFactory = new CloudFactory(this);
   private _dragonFactory = new DragonFactory(this);
   private _isPlaying = false;
+  private _background!: Background;
+  private _isBossStage = false;
 
   private _scoreLabel = new Label({
     text: "Score: 0",
@@ -37,6 +50,9 @@ export class GameScene extends Scene {
   private _score = 0;
 
   override onInitialize(engine: Engine): void {
+    this._background = new Background(engine);
+    this.add(this._background);
+
     this._hero = new Hero(engine, this);
     this.add(this._hero);
 
@@ -53,6 +69,10 @@ export class GameScene extends Scene {
     });
     this._score += amount;
     this._scoreLabel.text = `Score: ${this._score}`;
+
+    if (this._score >= 50 && !this._isBossStage) {
+      this._initBossStage();
+    }
   }
 
   public gameOver(): void {
@@ -65,7 +85,6 @@ export class GameScene extends Scene {
 
   private _start(): void {
     this._isPlaying = true;
-    Resources.Musics.Bgm.loop = true;
     Resources.Musics.Bgm.play();
 
     this._ground.start();
@@ -73,7 +92,12 @@ export class GameScene extends Scene {
     this._obsticleFactory.start();
     this._dragonFactory.start();
     this._cloudFactory.start();
-    this._initBossStage();
+  }
+
+  private _reset(): void {
+    this._obsticleFactory.reset();
+    this._dragonFactory.reset();
+    this._cloudFactory.reset();
   }
 
   private _stop(): void {
@@ -84,6 +108,13 @@ export class GameScene extends Scene {
     this._obsticleFactory.stop();
     this._dragonFactory.stop();
     this._cloudFactory.stop();
+
+    if (this._isBossStage) {
+      this._isBossStage = false;
+      this._background.restore(0);
+      const boss = this.actors.find((actor) => actor instanceof AncientDragon);
+      boss?.kill();
+    }
   }
 
   private _initLabels(engine: Engine): void {
@@ -162,6 +193,7 @@ export class GameScene extends Scene {
         return;
       }
 
+      this._reset();
       this._start();
       this._startGameLabel.graphics.isVisible = false;
       this._jumpLabel.graphics.isVisible = false;
@@ -184,8 +216,43 @@ export class GameScene extends Scene {
   }
 
   private _initBossStage(): void {
-    this._obsticleFactory.stop();
+    this._isBossStage = true;
+    this._obsticleFactory.pause();
     this._dragonFactory.setAmount(2);
+    this._fadeOutBgm();
+    this._background.fadeToDark(5000);
+
+    const lightning = new LightningFlash(this);
+    this.add(lightning);
+
+    const lightningTimer = new Timer({
+      interval: 800,
+      repeats: true,
+      randomRange: [200, 500],
+      numberOfRepeats: 5,
+      action: () => {
+        lightning.strike();
+      },
+      onComplete: () => lightning.kill(),
+    });
+
+    this.add(lightningTimer);
+    lightningTimer.start();
+
+    const bossTimer = new Timer({
+      interval: 5000,
+      numberOfRepeats: 1,
+      repeats: true,
+      action: () => this._spawnBoss(),
+    });
+
+    this.add(bossTimer);
+    bossTimer.start();
+  }
+
+  private _spawnBoss(): void {
+    Resources.Musics.Boss.play();
+
     const boss = new AncientDragon(
       vec(
         this.engine.screen.drawWidth,
@@ -196,6 +263,34 @@ export class GameScene extends Scene {
       ),
       this
     );
+
     this.add(boss);
+
+    boss.on("kill", () => {
+      this._background.restore(5000);
+      this._obsticleFactory.start();
+      this._dragonFactory.setAmount(1);
+      Resources.Musics.Boss.stop();
+    });
+  }
+
+  private _fadeOutBgm(): void {
+    const fadeOutTimer = new Timer({
+      interval: 200,
+      repeats: true,
+      action: () => {
+        Resources.Musics.Bgm.volume -= 0.1;
+
+        if (Resources.Musics.Bgm.volume <= 0) {
+          Resources.Musics.Bgm.stop();
+          fadeOutTimer.cancel();
+          this.remove(fadeOutTimer);
+          Resources.Musics.Bgm.volume = 1;
+        }
+      },
+    });
+
+    this.add(fadeOutTimer);
+    fadeOutTimer.start();
   }
 }

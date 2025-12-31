@@ -1,4 +1,4 @@
-import { Color, DisplayMode, Engine, FadeInOut, vec } from "excalibur";
+import { DisplayMode, Engine, FadeInOut, vec } from "excalibur";
 import { GameScene } from "./scenes/game.scene";
 import { MainMenuScene } from "./scenes/main-menu.scene";
 import { calculateExPixelConversion } from "./utils/pixel-conversion";
@@ -36,7 +36,7 @@ game
       // Optional in transition
       duration: 1000,
       direction: "in",
-      color: Color.ExcaliburBlue,
+      // color: Color.ExcaliburBlue,
     }),
   })
   .then(() => {
