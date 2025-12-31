@@ -1,3 +1,4 @@
+import { Config } from "@utils/config";
 import { Resources } from "@utils/resources";
 import {
   Animation,
@@ -5,11 +6,15 @@ import {
   Engine,
   range,
   SpriteSheet,
+  Timer,
   vec,
   Vector,
 } from "excalibur";
 import { GameScene } from "../scenes/game.scene";
+import { Hero } from "./hero.actor";
 import { KillableEnemy } from "./killable-enemy.base";
+import { FireOrb } from "./projectiles/fire-orb.actor";
+import { Shockwave } from "./projectiles/shockwave.actor";
 
 enum AncientDragonAnimation {
   Fly = "ancient-dragon-fly",
@@ -24,16 +29,43 @@ export class AncientDragon extends KillableEnemy {
   protected flyAnimationName = AncientDragonAnimation.Fly;
   protected hitAnimationName = AncientDragonAnimation.Hit;
 
+  private _fireOrbTimer: Timer;
+  private _shockwaveTimer: Timer;
+
+  private _hero!: Hero;
+
   constructor(pos: Vector, gameScene: GameScene) {
     super(gameScene, {
       pos,
       height: 128,
       width: 192,
     });
+
+    this._fireOrbTimer = new Timer({
+      interval: 0,
+      repeats: true,
+      action: () => this._castFireOrb(gameScene),
+      randomRange: [4000, 6000],
+    });
+
+    this._shockwaveTimer = new Timer({
+      interval: 0,
+      repeats: true,
+      action: () => this._castShockwave(gameScene),
+      randomRange: [7000, 9000],
+    });
   }
 
   public override onInitialize(engine: Engine): void {
     super.onInitialize(engine);
+
+    const hero = this.scene?.actors.find((actor) => actor instanceof Hero);
+
+    if (!hero) {
+      throw new Error("Hero not found in scene for Dragon actor");
+    }
+
+    this._hero = hero;
 
     const spriteSheet = SpriteSheet.fromImageSource({
       image: Resources.Images.AncientDragon,
@@ -68,5 +100,27 @@ export class AncientDragon extends KillableEnemy {
       pos: vec(engine.screen.drawWidth - 10 - this.width / 2, this.pos.y),
       duration: 2000,
     });
+
+    this._fireOrbTimer.start();
+    this._shockwaveTimer.start();
+    this.scene?.add(this._fireOrbTimer);
+    this.scene?.add(this._shockwaveTimer);
+  }
+
+  private _castFireOrb(gameScene: GameScene): void {
+    const orb = new FireOrb({
+      pos: this.pos.clone(),
+      yTarget: this._hero.pos.y,
+    });
+
+    gameScene.add(orb);
+  }
+
+  private _castShockwave(gameScene: GameScene): void {
+    const y = gameScene.engine.screen.drawHeight - Config.GroundHeight;
+
+    const shockwave = new Shockwave(vec(this.pos.x, y), y);
+
+    gameScene.add(shockwave);
   }
 }

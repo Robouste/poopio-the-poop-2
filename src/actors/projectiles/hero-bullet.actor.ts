@@ -13,7 +13,7 @@ import {
   vec,
   Vector,
 } from "excalibur";
-import { Enemy } from "./enemy.base";
+import { Enemy } from "../enemy.base";
 
 export class HeroBullet extends Actor {
   private _impactInvincibleAnimation!: Animation;

@@ -10,7 +10,7 @@ import {
 } from "excalibur";
 import { GameScene } from "../scenes/game.scene";
 import { Enemy } from "./enemy.base";
-import { HeroBullet } from "./hero-bullet.actor";
+import { HeroBullet } from "./projectiles/hero-bullet.actor";
 
 export const obsticleTypes = ["Plunger", "ToiletPaper"] as const;
 export type ObsticleType = (typeof obsticleTypes)[number];

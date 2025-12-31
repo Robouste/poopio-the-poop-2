@@ -22,21 +22,26 @@ export const Resources = {
     Cloud4: new ImageSource("./images/clouds/cloud4.png"),
     HealthBar: new ImageSource("./images/ui/health-bar.png"),
     HealthBarBorder: new ImageSource("./images/ui/health-bar-border.png"),
+    FireOrb: new ImageSource("./images/bullets/fire-orb.png"),
+    Shockwave: new ImageSource("./images/bullets/shockwave.png"),
   },
   // Sounds
   Sounds: {
     Jump: new Sound("./sounds/jump.wav"),
     DoubleJump: new Sound("./sounds/double-jump.wav"),
-    Fire: new Sound("./sounds/fire.mp3"),
+    Fire: new Sound("./sounds/attacks/fire.mp3"),
     GameOver: new Sound("./sounds/game-over.mp3"),
-    Impact: new Sound("./sounds/impact.wav"),
     LevelUp: new Sound("./sounds/level-up.wav"),
-    ImpactBoss: new Sound("./sounds/impact-boss.wav"),
-    ImpactInvincible: new Sound("./sounds/impact-invincible.mp3"),
+    Impact: new Sound("./sounds/impacts/impact.wav"),
+    ImpactBoss: new Sound("./sounds/impacts/impact-boss.wav"),
+    ImpactInvincible: new Sound("./sounds/impacts/impact-invincible.mp3"),
     ScoreUp: new Sound("./sounds/score-up.wav"),
+    FireOrb: new Sound("./sounds/attacks/fire-orb.mp3"),
+    Shockwave: new Sound("./sounds/attacks/shockwave.mp3"),
   },
   Musics: {
     Bgm: new Sound("./musics/bgm.mp3"),
+    Boss: new Sound("./musics/boss.mp3"),
   },
 } as const;
 
@@ -44,14 +49,8 @@ export const Resources = {
 // You can build your own loader by extending DefaultLoader
 export const loader = new Loader();
 
-for (const res of Object.values(Resources.Images)) {
-  loader.addResource(res);
-}
-
-for (const res of Object.values(Resources.Sounds)) {
-  loader.addResource(res);
-}
-
-for (const res of Object.values(Resources.Musics)) {
-  loader.addResource(res);
+for (const key of Object.values(Resources)) {
+  for (const res of Object.values(key)) {
+    loader.addResource(res);
+  }
 }

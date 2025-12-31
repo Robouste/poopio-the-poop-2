@@ -9,7 +9,7 @@ import {
 } from "excalibur";
 import { Enemy } from "./enemy.base";
 import { HealthBar } from "./health-bar.actor";
-import { HeroBullet } from "./hero-bullet.actor";
+import { HeroBullet } from "./projectiles/hero-bullet.actor";
 
 export abstract class KillableEnemy extends Enemy {
   public get hp(): number {

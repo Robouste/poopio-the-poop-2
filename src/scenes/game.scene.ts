@@ -185,7 +185,7 @@ export class GameScene extends Scene {
 
   private _initBossStage(): void {
     this._obsticleFactory.stop();
-    this._dragonFactory.setAmount(3);
+    this._dragonFactory.setAmount(2);
     const boss = new AncientDragon(
       vec(
         this.engine.screen.drawWidth,

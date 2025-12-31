@@ -4,4 +4,6 @@ export const Config = {
   ProjectileSpeed: 1000,
   HeroJumpVelocity: -425,
   ObsticleMaxHeight: 64,
+  FireOrbSpeed: 600,
+  ShockwaveSpeed: 600,
 } as const;

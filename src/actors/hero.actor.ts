@@ -22,7 +22,8 @@ import { GameScene } from "../scenes/game.scene";
 import { Resources } from "../utils/resources";
 import { Enemy } from "./enemy.base";
 import { Ground } from "./ground.actor";
-import { HeroBullet } from "./hero-bullet.actor";
+import { EnemyProjectile } from "./projectiles/enemy-projectile.base";
+import { HeroBullet } from "./projectiles/hero-bullet.actor";
 
 // Actors are the main unit of composition you'll likely use, anything that you want to draw and move around the screen
 // is likely built with an actor
@@ -114,7 +115,10 @@ export class Hero extends Actor {
       this.graphics.use(HeroAnimation.Run);
     }
 
-    if (other.owner instanceof Enemy) {
+    if (
+      other.owner instanceof Enemy ||
+      other.owner instanceof EnemyProjectile
+    ) {
       // this._gameScene.gameOver();
     }
   }
