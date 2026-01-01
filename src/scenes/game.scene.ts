@@ -70,7 +70,7 @@ export class GameScene extends Scene {
     this._score += amount;
     this._scoreLabel.text = `Score: ${this._score}`;
 
-    if (this._score >= 50 && !this._isBossStage) {
+    if (this._score >= 500 && !this._isBossStage) {
       this._initBossStage();
     }
   }
