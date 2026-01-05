@@ -13,6 +13,7 @@ import {
   PointerEvent,
   PointerType,
   range,
+  Shape,
   Side,
   Sprite,
   SpriteSheet,
@@ -64,8 +65,7 @@ export class Hero extends Actor {
       width: 32,
       height: 84,
       z: 2,
-      // anchor: vec(0, 0), // Actors default center colliders and graphics with anchor (0.5, 0.5)
-      collisionType: CollisionType.Active, // Collision Type Active means this participates in collisions read more https://excaliburjs.com/docs/collisiontypes
+      collisionType: CollisionType.Active,
     });
 
     this._startingPos = startingPos;
@@ -104,6 +104,8 @@ export class Hero extends Actor {
 
     this.graphics.use(HeroAnimation.Start);
 
+    this.collider.set(Shape.Box(28, 78, Vector.Half));
+
     this._initControls(engine);
   }
 
@@ -114,10 +116,10 @@ export class Hero extends Actor {
   }
 
   override onCollisionStart(
-    self: Collider,
+    _self: Collider,
     other: Collider,
-    side: Side,
-    contact: CollisionContact
+    _side: Side,
+    _contact: CollisionContact
   ): void {
     if (other.owner instanceof Ground) {
       this._noOfJumps = 2;
